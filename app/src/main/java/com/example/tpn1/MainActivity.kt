@@ -38,17 +38,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PantallaPrincipalPreview()
+            MiApp()
         }
     }
 }
 
+@Composable
+fun MiApp() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "PantallaPrincipal") {
+        composable("PantallaPrincipal") { PantallaPrincipal(navController) }
+        composable("PantallaEjercicio1") { PantallaEjercicio1() }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,9 +85,10 @@ fun PantallaEjercicio1Header() {
 }
 
 
+@Suppress("PreviewAnnotationInFunctionWithParameters")
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PantallaPrincipalPreview() {
+fun PantallaPrincipal(navController: NavController) {
     Scaffold(topBar = {PantallaPrincipal_Header() }) { padding ->
         Box(modifier = Modifier
             .padding(padding)
@@ -86,7 +101,7 @@ fun PantallaPrincipalPreview() {
             ) {
                 Row {
                     Column {
-                        Button(onClick = { /* Handle button click */ }) {
+                        Button(onClick = {navController.navigate("PantallaEjercicio1")}) {
                             Text("Ejercicio 1")
                         }
                         Spacer(modifier = Modifier.height(16.dp))
@@ -108,7 +123,7 @@ fun PantallaPrincipalPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PantallaEjercicio1Preview() {
+fun PantallaEjercicio1() {
     Scaffold(topBar = { PantallaEjercicio1Header() }) { padding ->
         Column(modifier = Modifier
             .padding(padding)
