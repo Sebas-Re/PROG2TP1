@@ -51,6 +51,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
@@ -101,6 +102,24 @@ fun PantallaEjercicio1Header() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PantallaEjercicio2Header() {
+    TopAppBar(
+        title = {
+            Text(
+                text = "Calculadora",
+                color = Color.White,
+                modifier = Modifier
+                    .background(Color.Blue)
+                    .padding(16.dp),
+                textAlign = TextAlign.Center
+            )
+        },
+        colors = topAppBarColors(containerColor = Color.Blue)
+    )
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PantallaPrincipalPreview() {
@@ -129,7 +148,7 @@ fun PantallaPrincipal(navController: NavController) {
                             Text("Ejercicio 1")
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { /* Handle button click */ }) {
+                        Button(onClick = {navController.navigate("PantallaEjercicio2")}) {
                             Text("Ejercicio 2")
                         }
                     }
@@ -195,7 +214,9 @@ fun PantallaEjercicio1() {
                             })
                         }
                     },
-                    modifier = Modifier.width(250.dp).padding(20.dp)
+                    modifier = Modifier
+                        .width(250.dp)
+                        .padding(20.dp)
                 )
             }
 
@@ -271,6 +292,151 @@ fun PantallaEjercicio1() {
 
 
             Spacer(modifier = Modifier.weight(1f))
+
+        }
+    }
+}
+
+
+
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PantallaEjercicio2() {
+    var primerNumero by remember { mutableStateOf("") }
+    var segundoNumero by remember { mutableStateOf("0") }
+    var resultado by remember { mutableStateOf<Int?>(null) }
+
+    Scaffold(topBar = { PantallaEjercicio2Header() }) { padding ->
+        Column(modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
+            .padding(top = 100.dp)
+        ) {
+            // EditText (solo números)
+            AndroidView(
+                factory = { context ->
+                    EditText(context).apply {
+                        //hint = "Número"
+                        inputType = android.text.InputType.TYPE_CLASS_NUMBER  // Solo números
+                        textSize = 20f
+                        setText(segundoNumero)  // Configura el texto inicial
+                        addTextChangedListener(object : TextWatcher {
+                            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                                segundoNumero = s.toString()
+                            }
+                            override fun afterTextChanged(s: Editable?) {}
+                        })
+                    }
+                },
+                modifier = Modifier.width(500.dp)
+            )
+
+            Row {
+                Button(
+                    onClick = { /* Acción al hacer clic en el primer botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("7")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el segundo botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("8")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el tercer botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("9")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el cuarto botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("+")
+                }
+            }
+            Row {
+                Button(
+                    onClick = { /* Acción al hacer clic en el primer botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("4")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el segundo botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("5")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el tercer botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("6")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el cuarto botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("-")
+                }
+            }
+            Row {
+                Button(
+                    onClick = { /* Acción al hacer clic en el primer botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("1")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el segundo botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("2")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el tercer botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("3")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el cuarto botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("*")
+                }
+            }
+            Row {
+                Button(
+                    onClick = { /* Acción al hacer clic en el primer botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("BORRAR")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el segundo botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("0")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el tercer botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("=")
+                }
+                Button(
+                    onClick = { /* Acción al hacer clic en el cuarto botón */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("/")
+                }
+            }
 
         }
     }
