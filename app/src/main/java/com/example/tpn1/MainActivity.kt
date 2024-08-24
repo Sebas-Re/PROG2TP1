@@ -71,6 +71,7 @@ fun MiApp() {
     NavHost(navController = navController, startDestination = "PantallaPrincipal") {
         composable("PantallaPrincipal") { PantallaPrincipal(navController) }
         composable("PantallaEjercicio1") { PantallaEjercicio1() }
+        composable("PantallaEjercicio2") { PantallaEjercicio2() }
     }
 }
 
@@ -299,35 +300,33 @@ fun PantallaEjercicio1() {
 
 
 
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PantallaEjercicio2() {
     var primerNumero by remember { mutableStateOf("") }
-    var segundoNumero by remember { mutableStateOf("0") }
+    var segundoNumero by remember { mutableStateOf("") }
+    var operacion by remember { mutableStateOf<String?>(null) }
     var resultado by remember { mutableStateOf<Int?>(null) }
+    var expression by remember { mutableStateOf("0") }
+    var isResultDisplayed by remember { mutableStateOf(false) }  // Bandera para saber si se mostró el resultado
 
     Scaffold(topBar = { PantallaEjercicio2Header() }) { padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .fillMaxSize()
-            .padding(top = 100.dp)
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .padding(top = 100.dp)
         ) {
-            // EditText (solo números)
+            var editText: EditText? = null
+
+            // EditText para mostrar la expresión y el resultado
             AndroidView(
                 factory = { context ->
                     EditText(context).apply {
-                        //hint = "Número"
-                        inputType = android.text.InputType.TYPE_CLASS_NUMBER  // Solo números
+                        inputType = android.text.InputType.TYPE_CLASS_TEXT  // Permitir números y texto
                         textSize = 20f
-                        setText(segundoNumero)  // Configura el texto inicial
-                        addTextChangedListener(object : TextWatcher {
-                            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                                segundoNumero = s.toString()
-                            }
-                            override fun afterTextChanged(s: Editable?) {}
-                        })
+                        setText(expression)  // Configura el texto inicial
+                        editText = this  // Asigna la referencia al EditText
                     }
                 },
                 modifier = Modifier.width(500.dp)
@@ -335,25 +334,65 @@ fun PantallaEjercicio2() {
 
             Row {
                 Button(
-                    onClick = { /* Acción al hacer clic en el primer botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "7"
+                            segundoNumero = ""
+                            expression = "7"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "7"
+                            expression = if (expression == "0") "7" else expression + "7"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("7")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el segundo botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "8"
+                            segundoNumero = ""
+                            expression = "8"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "8"
+                            expression = if (expression == "0") "8" else expression + "8"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("8")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el tercer botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "9"
+                            segundoNumero = ""
+                            expression = "9"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "9"
+                            expression = if (expression == "0") "9" else expression + "9"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("9")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el cuarto botón */ },
+                    onClick = {
+                        primerNumero = resultado?.toString() ?: segundoNumero
+                        segundoNumero = ""
+                        operacion = "+"
+                        expression += "+"
+                        isResultDisplayed = false
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("+")
@@ -361,25 +400,65 @@ fun PantallaEjercicio2() {
             }
             Row {
                 Button(
-                    onClick = { /* Acción al hacer clic en el primer botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "4"
+                            segundoNumero = ""
+                            expression = "4"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "4"
+                            expression = if (expression == "0") "4" else expression + "4"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("4")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el segundo botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "5"
+                            segundoNumero = ""
+                            expression = "5"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "5"
+                            expression = if (expression == "0") "5" else expression + "5"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("5")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el tercer botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "6"
+                            segundoNumero = ""
+                            expression = "6"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "6"
+                            expression = if (expression == "0") "6" else expression + "6"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("6")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el cuarto botón */ },
+                    onClick = {
+                        primerNumero = resultado?.toString() ?: segundoNumero
+                        segundoNumero = ""
+                        operacion = "-"
+                        expression += "-"
+                        isResultDisplayed = false
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("-")
@@ -387,25 +466,65 @@ fun PantallaEjercicio2() {
             }
             Row {
                 Button(
-                    onClick = { /* Acción al hacer clic en el primer botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "1"
+                            segundoNumero = ""
+                            expression = "1"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "1"
+                            expression = if (expression == "0") "1" else expression + "1"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("1")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el segundo botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "2"
+                            segundoNumero = ""
+                            expression = "2"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "2"
+                            expression = if (expression == "0") "2" else expression + "2"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("2")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el tercer botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "3"
+                            segundoNumero = ""
+                            expression = "3"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "3"
+                            expression = if (expression == "0") "3" else expression + "3"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("3")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el cuarto botón */ },
+                    onClick = {
+                        primerNumero = resultado?.toString() ?: segundoNumero
+                        segundoNumero = ""
+                        operacion = "*"
+                        expression += "*"
+                        isResultDisplayed = false
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("*")
@@ -413,31 +532,73 @@ fun PantallaEjercicio2() {
             }
             Row {
                 Button(
-                    onClick = { /* Acción al hacer clic en el primer botón */ },
+                    onClick = {
+                        primerNumero = ""
+                        segundoNumero = ""
+                        resultado = null
+                        operacion = null
+                        expression = "0"
+                        isResultDisplayed = false
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("BORRAR")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el segundo botón */ },
+                    onClick = {
+                        if (isResultDisplayed) {
+                            primerNumero = "0"
+                            segundoNumero = ""
+                            expression = "0"
+                            isResultDisplayed = false
+                        } else {
+                            segundoNumero += "0"
+                            expression = if (expression == "0") "0" else expression + "0"
+                        }
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("0")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el tercer botón */ },
+                    onClick = {
+                        when (operacion) {
+                            "+" -> resultado = primerNumero.toInt() + segundoNumero.toInt()
+                            "-" -> resultado = primerNumero.toInt() - segundoNumero.toInt()
+                            "*" -> resultado = primerNumero.toInt() * segundoNumero.toInt()
+                            "/" -> resultado = primerNumero.toInt() / segundoNumero.toInt()
+                        }
+                        expression = resultado.toString()
+                        editText?.setText(expression)
+                        primerNumero = resultado.toString()  // Guardar el resultado en primerNumero
+                        segundoNumero = ""
+                        operacion = null
+                        isResultDisplayed = true  // Marcar que se mostró el resultado
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("=")
                 }
                 Button(
-                    onClick = { /* Acción al hacer clic en el cuarto botón */ },
+                    onClick = {
+                        primerNumero = resultado?.toString() ?: segundoNumero
+                        segundoNumero = ""
+                        operacion = "/"
+                        expression += "/"
+                        isResultDisplayed = false
+                        editText?.setText(expression)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("/")
                 }
             }
-
         }
     }
 }
+
+
+
+
