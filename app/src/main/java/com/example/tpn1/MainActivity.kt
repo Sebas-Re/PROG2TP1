@@ -53,7 +53,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.compose.ui.unit.sp
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,9 +104,10 @@ fun PantallaEjercicio1Header() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PantallaPrincipalPreview() {
-    val navController = rememberNavController() // NavController Dummy
+    val navController = rememberNavController() // NavController ficticio
     PantallaPrincipal(navController)
 }
+
 
 @Suppress("PreviewAnnotationInFunctionWithParameters")
 @Preview(showBackground = true, showSystemUi = true)
@@ -148,7 +148,11 @@ fun PantallaPrincipal(navController: NavController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PantallaEjercicio1() {
-      Scaffold(topBar = { PantallaEjercicio1Header() }) { padding ->
+    var primerNumero by remember { mutableStateOf("") }
+    var segundoNumero by remember { mutableStateOf("") }
+    var resultado by remember { mutableStateOf<Int?>(null) }
+
+    Scaffold(topBar = { PantallaEjercicio1Header() }) { padding ->
         Column(modifier = Modifier
             .padding(padding)
             .fillMaxSize()
@@ -181,28 +185,93 @@ fun PantallaEjercicio1() {
                             //hint = "Número"
                             inputType = android.text.InputType.TYPE_CLASS_NUMBER  // Solo números
                             textSize = 20f
-
+                            setText(primerNumero)  // Configura el texto inicial
+                            addTextChangedListener(object : TextWatcher {
+                                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                                    primerNumero = s.toString()
+                                }
+                                override fun afterTextChanged(s: Editable?) {}
+                            })
                         }
                     },
                     modifier = Modifier.width(250.dp).padding(20.dp)
                 )
             }
-        }
+
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,  // Alinear verticalmente al centro
+                //horizontalArrangement = Arrangement.Start,       // Alinear horizontalmente al inicio
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                // TextView
+                AndroidView(
+                    factory = { context ->
+                        TextView(context).apply {
+                            text = "Segundo Número:"  // Establece el texto
+                            textSize = 20f  // Establece el tamaño del texto
+                        }
+                    },
+                    modifier = Modifier
+                        //.weight(1f)
+                        .padding(top = 4.dp)
+                )
+
+                // EditText (solo números)
+                AndroidView(
+                    factory = { context ->
+                        EditText(context).apply {
+                            //hint = "Número"
+                            inputType = android.text.InputType.TYPE_CLASS_NUMBER  // Solo números
+                            textSize = 20f
+                            setText(segundoNumero)  // Configura el texto inicial
+                            addTextChangedListener(object : TextWatcher {
+                                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                                    segundoNumero = s.toString()
+                                }
+                                override fun afterTextChanged(s: Editable?) {}
+                            })
+                        }
+                    },
+                    modifier = Modifier.width(200.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(19.dp))
+
             Button(
-                onClick = { /* Handle button click */ },
-                //modifier = Modifier.align(Alignment.CenterHorizontally) // centrar boton
+                onClick = {
+                    val num1 = primerNumero.toIntOrNull()
+                    val num2 = segundoNumero.toIntOrNull()
+                    if (num1 != null && num2 != null) {
+                        resultado = num1 + num2
+                    } else {
+                        resultado = null // Maneja el caso de valores no numéricos
+                    }
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally) // centrar botón
             ) {
                 Text("Calcular")
             }
 
-            //Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(19.dp))
 
-            Text(
-                text = "INTEGRANTES: Sebastián Re, Cristian Benitez, Manuel Pais, Adriel Lopez, Dario Troilo",
-                modifier = Modifier
-                    //.align(Alignment.CenterHorizontally)
-                    .padding(16.dp)
-            )
+            resultado?.let {
+                Text(
+                    text = "Resultado: $it",
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = Color.Black,
+                    fontSize = 19.sp
+                )
+            }
+
+
+            Spacer(modifier = Modifier.weight(1f))
+
         }
     }
-
+}
